@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CardWrapper } from '@/components/auth/card-wrapper'
 import { LoginSchema } from '@/schemas'
+import Link from 'next/link';
 
 import {
   Form,
@@ -29,6 +30,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -46,8 +48,7 @@ export const LoginForm = () => {
         .then((data) => {
           console.log(data);
           setError(data?.error);
-          //TODO: add when we add 2FA
-          // setSuccess(data.success);
+          setSuccess(data?.success);
         })
     });
   }
@@ -97,12 +98,19 @@ export const LoginForm = () => {
                       type='password'
                     />
                   </FormControl>
+                  <Button
+                    size="sm"
+                    variant="link"
+                    asChild
+                    className='px-0 font-normal'>
+                    <Link href="/auth/reset">
+                      Forgot password?
+                    </Link>
+                  </Button>
                   <FormMessage />
                 </FormItem>
               )}
-            >
-
-            </FormField>
+            />
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
