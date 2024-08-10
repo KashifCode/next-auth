@@ -1,6 +1,7 @@
 "use client";
 
 import { logout } from "@/actions/logout";
+import { usePathname } from "next/navigation";
 
 interface LogoutProps {
     children?: React.ReactNode;
@@ -9,8 +10,15 @@ interface LogoutProps {
 export const LogoutButton = ({
     children
 }: LogoutProps) => {
+    const pathname = usePathname();
+    
+    const search = new URLSearchParams(window.location.search).toString();
+    const callbackUrl = pathname + search;
+    
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
     const onClick = () => {
-        logout();
+        logout(encodedCallbackUrl);
     };
 
     return (
